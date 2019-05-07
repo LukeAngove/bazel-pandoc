@@ -35,7 +35,7 @@ def pandoc(**kwargs):
     # ones with no commonly used extension.
     extensions = {
         "asciidoc": "adoc",
-        "beamer": "tex",
+        "beamer": ["tex", "pdf"],
         "commonmark": "md",
         "context": "tex",
         "docbook": "xml",
@@ -55,7 +55,7 @@ def pandoc(**kwargs):
         "icml": "icml",
         "jats": "xml",
         "json": "json",
-        "latex": "tex",
+        "latex": ["tex", "pdf"],
         "man": "1",
         "markdown": "md",
         "markdown_github": "md",
@@ -87,4 +87,17 @@ def pandoc(**kwargs):
     if to_format not in extensions:
         fail("Unknown output format: " + to_format)
 
-    _pandoc(extension = extensions[to_format], **kwargs)
+    extension = extensions[to_format]
+
+    # Handle cases with multiple options.
+    if isinstance(extension, list):
+        if "extension" in kwargs:
+            if kwargs["extension"] in extension:
+                extension = kwargs["extension"]
+            else: # We have a manual, invalid extension.
+                fail("invalid extension for format " + to_format + ":" + extension + " (valid are: " + extension + ")")
+        else:
+            # If it's not explicit, just choose the first option as the default.
+            extension = extension[0]
+
+    _pandoc(extension = extension, **kwargs)
