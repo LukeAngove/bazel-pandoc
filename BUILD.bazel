@@ -44,7 +44,9 @@ pandoc_toolchain(
 
 [pandoc(
     name = "readme_" + fmt,
-    src = "README.md",
+    src = [
+      "README.md",
+    ],
     from_format = "markdown",
     to_format = fmt,
 ) for fmt in [
@@ -70,6 +72,7 @@ pandoc_toolchain(
     "jats",
     "json",
     "latex",
+    "pdflatex",
     "man",
     "markdown",
     "markdown_github",
