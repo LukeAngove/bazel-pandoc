@@ -34,57 +34,69 @@ def pandoc(**kwargs):
     # Use the generic .xml syntax for XML-based formats and .txt for
     # ones with no commonly used extension.
     extensions = {
-        "asciidoc": "adoc",
-        "beamer": "tex",
-        "commonmark": "md",
-        "context": "tex",
-        "docbook": "xml",
-        "docbook4": "xml",
-        "docbook5": "xml",
-        "docx": "docx",
-        "dokuwiki": "txt",
-        "dzslides": "html",
-        "epub": "epub",
-        "epub2": "epub",
-        "epub3": "epub",
-        "fb2": "fb",
-        "haddock": "txt",
-        "html": "html",
-        "html4": "html",
-        "html5": "html",
-        "icml": "icml",
-        "jats": "xml",
-        "json": "json",
-        "latex": "tex",
-        "man": "1",
-        "markdown": "md",
-        "markdown_github": "md",
-        "markdown_mmd": "md",
-        "markdown_phpextra": "md",
-        "markdown_strict": "md",
-        "mediawiki": "txt",
-        "ms": "1",
-        "muse": "txt",
-        "native": "txt",
-        "odt": "odt",
-        "opendocument": "odt",
-        "opml": "openml",
-        "org": "txt",
-        "plain": "txt",
-        "pptx": "pptx",
-        "revealjs": "html",
-        "rst": "rst",
-        "rtf": "rtf",
-        "s5": "html",
-        "slideous": "html",
-        "slidy": "html",
-        "tei": "html",
-        "texinfo": "texi",
-        "textile": "textile",
-        "zimwiki": "txt",
+        "asciidoc": ["adoc"],
+        "beamer": ["tex", "pdf"],
+        "commonmark": ["md"],
+        "context": ["tex"],
+        "docbook": ["xml"],
+        "docbook4": ["xml"],
+        "docbook5": ["xml"],
+        "docx": ["docx"],
+        "dokuwiki": ["txt"],
+        "dzslides": ["html"],
+        "epub": ["epub"],
+        "epub2": ["epub"],
+        "epub3": ["epub"],
+        "fb2": ["fb"],
+        "haddock": ["txt"],
+        "html": ["html"],
+        "html4": ["html"],
+        "html5": ["html"],
+        "icml": ["icml"],
+        "jats": ["xml"],
+        "json": ["json"],
+        "latex": ["tex", "pdf"],
+        "man": ["1"],
+        "markdown": ["md"],
+        "markdown_github": ["md"],
+        "markdown_mmd": ["md"],
+        "markdown_phpextra": ["md"],
+        "markdown_strict": ["md"],
+        "mediawiki": ["txt"],
+        "ms": ["1"],
+        "muse": ["txt"],
+        "native": ["txt"],
+        "odt": ["odt"],
+        "opendocument": ["odt"],
+        "opml": ["openml"],
+        "org": ["txt"],
+        "plain": ["txt"],
+        "pptx": ["pptx"],
+        "revealjs": ["html"],
+        "rst": ["rst"],
+        "rtf": ["rtf"],
+        "s5": ["html"],
+        "slideous": ["html"],
+        "slidy": ["html"],
+        "tei": ["html"],
+        "texinfo": ["texi"],
+        "textile": ["textile"],
+        "zimwiki": ["txt"],
     }
     to_format = kwargs["to_format"]
     if to_format not in extensions:
         fail("Unknown output format: " + to_format)
 
-    _pandoc(extension = extensions[to_format], **kwargs)
+    extension = extensions[to_format]
+
+    # Handle cases with multiple options.
+    if "extension" in kwargs:
+        if kwargs["extension"] in extension:
+            extension = kwargs["extension"]
+        else: # We have a manual, invalid extension.
+            fail("invalid extension for format " + to_format + ":" + extension + " (valid are: " + extension + ")")
+    else:
+        # If it's not explicit, just choose the first option as the default.
+        extension = extension[0]
+
+    _pandoc(extension = extension, **kwargs)
