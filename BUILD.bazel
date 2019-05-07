@@ -70,6 +70,7 @@ pandoc_toolchain(
     "jats",
     "json",
     "latex",
+    "pdflatex",
     "man",
     "markdown",
     "markdown_github",
