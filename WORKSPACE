@@ -10,6 +10,19 @@ http_archive(
     ],
 )
 
+http_archive(
+    name = "bazel_latex",
+    strip_prefix = "bazel-latex-0.17",
+    url = "https://github.com/ProdriveTechnologies/bazel-latex/archive/v0.17.tar.gz",
+    sha256 = "",
+)
+
+load("@bazel_latex//:repositories.bzl", "latex_repositories")
+
+latex_repositories()
+
 load("//:repositories.bzl", "pandoc_repositories")
 
 pandoc_repositories()
+
+

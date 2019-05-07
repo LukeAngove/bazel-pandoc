@@ -1,5 +1,5 @@
 def _pandoc_impl(ctx):
-    toolchain = ctx.toolchains["@bazel_pandoc//:pandoc_toolchain_type"]
+    toolchain = ctx.toolchains["@bazel_pandoc//:pandoc_toolchain_type", "@bazel_latex//:latex_toochain_type"]
     ctx.actions.run(
         mnemonic = "Pandoc",
         executable = toolchain.pandoc.files.to_list()[0].path,
@@ -25,7 +25,7 @@ _pandoc = rule(
         "to_format": attr.string(),
     },
     outputs = {"out": "%{name}.%{extension}"},
-    toolchains = ["@bazel_pandoc//:pandoc_toolchain_type"],
+    toolchains = ["@bazel_pandoc//:pandoc_toolchain_type", "@bazel_latex//:latex_toochain_type"],
     implementation = _pandoc_impl,
 )
 
